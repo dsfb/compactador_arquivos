@@ -72,7 +72,13 @@ class Aplicacao:
 		# abre janela para escolher arquivo
 		nome_arquivo = askopenfilename()
 		if nome_arquivo != "": # se escolheu algo
-			self.listbox.insert(END, nome_arquivo)
+			# pega todos os itens da listbox
+			lista_arquivos = self.listbox.get(0, END)
+			if nome_arquivo not in lista_arquivos:
+				self.listbox.insert(END, nome_arquivo)
+				messagebox.showinfo("Compactador", "O item foi adicionado com sucesso!")
+			else:
+				messagebox.showinfo("Compactador", "Erro: O item já existe na lista!")
 
 	# função associada ao evento do botão deletar
 	# essa função deleta os itens selecionados
@@ -86,6 +92,7 @@ class Aplicacao:
 				item_pos = int(i) - pos # obtem a posição do item selecionado
 				self.listbox.delete(item_pos, item_pos) # deleta um item selecionado
 				pos = pos + 1 # incrementa pos
+			messagebox.showinfo("Compactador", "Os itens foram apagados com sucesso!")
 
 	# função associada ao evento do botão compactar
 	def compactar(self):
@@ -100,6 +107,7 @@ class Aplicacao:
 			compactador = Compactador() # obtém instância de Compactador
 			compactador.compactar(lista_arquivos) # compacta todos os arquivos
 			self.botao_compactar.configure(state=NORMAL) # habilita o botão
+			messagebox.showinfo("Compactador", "A compactação ocorreu com sucesso!")
 		t = Thread(target=executar) # cria thread
 		t.start() # inicia a thread
 
