@@ -4,11 +4,15 @@
 # Esse módulo tem como objetivo construir a interface gráfica do programa
 # Autor: Marcos Castro
 
-from Tkinter import * # funções Tkinter
-from tkFileDialog import askopenfilename # função para escolher arquivo
+from tkinter import * # funções Tkinter
+from tkinter.filedialog import askopenfilename # função para escolher arquivo
 from compactador import * # módulo compactador
-import tkMessageBox # message box
+from tkinter import messagebox # message box
+from tkinter import PhotoImage # objeto para leitura do arquivo de imagem
 from threading import Thread # importa módulo thread
+
+import sys
+
 
 class Aplicacao:
 
@@ -75,7 +79,7 @@ class Aplicacao:
 	def deletar(self):
 		items = self.listbox.curselection() # obtem lista de índices dos itens
 		if len(items) == 0:
-			tkMessageBox.showinfo("Compactador", "Selecione pelo menos um item!")
+			messagebox.showinfo("Compactador", "Selecione pelo menos um item!")
 		else:
 			pos = 0
 			for i in items: # percorre a lista de indices
@@ -88,7 +92,7 @@ class Aplicacao:
 		# pega todos os itens da listbox
 		lista_arquivos = self.listbox.get(0, END)
 		if len(lista_arquivos) == 0:
-			tkMessageBox.showinfo("Compactador", "Adicione algum arquivo para compactar!")
+			messagebox.showinfo("Compactador", "Adicione algum arquivo para compactar!")
 			return # sai da função
 		def executar():
 			self.botao_compactar.configure(state=DISABLED) # desabilita o botão
@@ -102,7 +106,11 @@ class Aplicacao:
 
 root = Tk() # obtém uma instância de Tk
 root.title("Compactador de arquivos") # coloca um titulo na janela
-root.iconbitmap(default="icone.ico") # coloca um icone
+if sys.platform.startswith('win'):
+	root.iconbitmap(bitmap="icone.ico") # coloca um icone no Windows
+else:
+	img = PhotoImage(file="icone.png")
+	root.tk.call('wm', 'iconphoto', root._w, img) # coloca um icone no Linux e outros SOs.
 root.geometry('400x300') # ajusta o tamanho
 root.resizable(width=FALSE, height=FALSE) # desabilita o redimensionamento da janela
 Aplicacao(root) # passa instancia de Tk para classe Aplicacao
